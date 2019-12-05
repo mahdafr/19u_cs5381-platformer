@@ -1,13 +1,12 @@
 package edu.utep.cs5381.platformer;
 
 public class Bullet  {
-
     private float x;
     private float y;
     private float xVelocity;
     private int direction;
 
-    Bullet(float x, float y, int speed, int direction){
+    public Bullet(float x, float y, int speed, int direction){
         this.direction = direction;
         this.x = x;
         this.y = y;
@@ -18,7 +17,7 @@ public class Bullet  {
         return direction;
     }
 
-    public void update(long fps, float gravity){
+    public void update(long fps){
         x += xVelocity / fps;
     }
 
@@ -34,6 +33,5 @@ public class Bullet  {
     public float getY(){
         return y;
     }
-
 }
 

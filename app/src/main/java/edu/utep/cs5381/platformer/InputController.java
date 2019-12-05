@@ -2,19 +2,18 @@ package edu.utep.cs5381.platformer;
 
 import android.graphics.Rect;
 import android.view.MotionEvent;
-
 import java.util.ArrayList;
 
-public class InputController {
+import edu.utep.cs5381.platformer.visuals.Viewport;
 
-    Rect left;
-    Rect right;
-    Rect jump;
-    Rect shoot;
-    Rect pause;
+class InputController {
+    private Rect left;
+    private Rect right;
+    private Rect jump;
+    private Rect shoot;
+    private Rect pause;
 
     InputController(int screenWidth, int screenHeight) {
-
         //Configure the player buttons
         int buttonWidth = screenWidth / 8;
         int buttonHeight = screenHeight / 7;
@@ -44,12 +43,9 @@ public class InputController {
                 buttonPadding,
                 screenWidth - buttonPadding,
                 buttonPadding + buttonHeight);
-
-
-
     }
 
-    public ArrayList getButtons(){
+    ArrayList getButtons() {
         //create an array of buttons for the draw method
         ArrayList<Rect> currentButtonList = new ArrayList<>();
         currentButtonList.add(left);
@@ -60,109 +56,58 @@ public class InputController {
         return  currentButtonList;
     }
 
-
-    public void handleInput(MotionEvent motionEvent,LevelManager l, SoundManager sound, Viewport vp){
+    void handleInput(MotionEvent motionEvent,LevelManager l, SoundManager sound, Viewport vp){
         int pointerCount = motionEvent.getPointerCount();
 
         for (int i = 0; i < pointerCount; i++) {
-
             int x = (int) motionEvent.getX(i);
             int y = (int) motionEvent.getY(i);
-
             if(l.isPlaying()) {
-
                 switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
                     case MotionEvent.ACTION_DOWN:
-                        if (right.contains(x, y)) {
-                            l.player.setPressingRight(true);
-                            l.player.setPressingLeft(false);
-                        } else if (left.contains(x, y)) {
-                            l.player.setPressingLeft(true);
-                            l.player.setPressingRight(false);
-                        } else if (jump.contains(x, y)) {
-                            l.player.startJump(sound);
-                        } else if (shoot.contains(x, y)) {
-                            if (l.player.pullTrigger()) {
-                                sound.play(SoundManager.Sound.SHOOT);//playSound("shoot");
-                            }
-                        } else if (pause.contains(x, y)) {
-                            l.switchPlayingStatus();
-
-                        }
-
-                        break;
-
-
-                    case MotionEvent.ACTION_UP:
-                        if (right.contains(x, y)) {
-                            l.player.setPressingRight(false);
-                        } else if (left.contains(x, y)) {
-                            l.player.setPressingLeft(false);
-                        }
-
-
-                        break;
-
-
                     case MotionEvent.ACTION_POINTER_DOWN:
                         if (right.contains(x, y)) {
-                            l.player.setPressingRight(true);
-                            l.player.setPressingLeft(false);
+                            l.player().setPressingRight(true);
+                            l.player().setPressingLeft(false);
                         } else if (left.contains(x, y)) {
-                            l.player.setPressingLeft(true);
-                            l.player.setPressingRight(false);
+                            l.player().setPressingLeft(true);
+                            l.player().setPressingRight(false);
                         } else if (jump.contains(x, y)) {
-                            l.player.startJump(sound);
+                            l.player().startJump(sound);
                         } else if (shoot.contains(x, y)) {
-                            if (l.player.pullTrigger()) {
-                                sound.play(SoundManager.Sound.SHOOT);//("shoot");
+                            if (l.player().pullTrigger()) {
+                                sound.play(SoundManager.Sound.SHOOT);
                             }
                         } else if (pause.contains(x, y)) {
                             l.switchPlayingStatus();
                         }
                         break;
-
-
-                    case MotionEvent.ACTION_POINTER_UP:
+                    case MotionEvent.ACTION_UP:
                         if (right.contains(x, y)) {
-                            l.player.setPressingRight(false);
+                            l.player().setPressingRight(false);
                         } else if (left.contains(x, y)) {
-                            l.player.setPressingLeft(false);
+                            l.player().setPressingLeft(false);
                         }
                         break;
                 }
-            }else {// Not playing
+            } else { // Not playing
                 //Move the viewport around to explore the map
                 switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
                     case MotionEvent.ACTION_DOWN:
-                        if (right.contains(x, y)) {
+                        if ( right.contains(x, y)) {
                             vp.moveViewportRight(l.mapWidth);
-                            //Log.w("right:", "DOWN" );
                         } else if (left.contains(x, y)) {
                             vp.moveViewportLeft();
-                            //Log.w("left:", "DOWN" );
                         } else if (jump.contains(x, y)) {
                             vp.moveViewportUp();
-                            //Log.w("jump:", "DOWN" );/
                         } else if (shoot.contains(x, y)) {
                             vp.moveViewportDown(l.mapHeight);
-                            //Log.w("shoot:", "DOWN" );/
                         } else if (pause.contains(x, y)) {
                             l.switchPlayingStatus();
-                            //Log.w("pause:", "DOWN" );
                         }
-
                         break;
-
-
                 }
-
-
-
             }
         }
-
     }
 }

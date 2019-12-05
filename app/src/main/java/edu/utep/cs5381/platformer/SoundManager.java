@@ -23,9 +23,10 @@ public class SoundManager {
             this.resourceId = resourceId;
         }
     }
+
     private SoundPool soundPool;
 
-    public SoundManager(Context context) {
+    SoundManager(Context context) {
         soundPool = new SoundPool.Builder().setMaxStreams(Sound.values().length).build();
         for (Sound sound: Sound.values())
             sound.soundId = soundPool.load(context, sound.resourceId, 1);
