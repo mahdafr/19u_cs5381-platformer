@@ -117,4 +117,3 @@ public class Viewport {
         numClipped = 0;
     }
 }
-
